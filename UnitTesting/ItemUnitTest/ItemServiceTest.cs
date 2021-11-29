@@ -47,5 +47,64 @@ namespace UnitTesting.ItemUnitTest
             //Assert
             Assert.Equal(result, item);
         }
+        [Fact]
+        public async Task DeleteItemAsync_ExistingItem_ItemDeleted()
+        {
+            //Arrange
+            _mockedItemRepository.Setup(x => x.Delete(item)).ReturnsAsync(true);
+            _mockedItemRepository.Setup(x => x.Get(item.Id)).ReturnsAsync(item);
+
+
+            //Act
+            var result = await _itemService.Delete(item.Id);
+
+            //Assert
+            Assert.True(result);
+        }
+
+        [Fact]
+        public async Task DeleteItemAsync_NonexistingItem_ItemNotFound()
+        {
+            //Arrange
+            _mockedItemRepository.Setup(x => x.Delete(item)).ReturnsAsync(false);
+            _mockedItemRepository.Setup(x => x.Get(item.Id)).ReturnsAsync((Item)null);
+
+
+            //Act
+            var result = await _itemService.Delete(item.Id);
+
+            //Assert
+            Assert.False(result);
+        }
+
+        [Fact]
+        public async Task UpdateItemAsync_ValidData_ItemUpdated()
+        {
+            //Arrange
+            _mockedItemRepository.Setup(x => x.Update(item)).ReturnsAsync(item);
+            Item formerItem = ItemHelper.ItemData();
+            formerItem.Name = "DifferentName";
+            _mockedItemRepository.Setup(x => x.Get(item.Id)).ReturnsAsync(formerItem);
+
+            //Act
+            var result = await _itemService.Update(item);
+
+            //Assert
+            Assert.NotEqual(result.Name, formerItem.Name);
+        }
+
+        [Fact]
+        public async Task UpdateItemAsync_ValidData_ItemNotFound()
+        {
+            //Arrange
+            _mockedItemRepository.Setup(x => x.Update(item)).ReturnsAsync((Item)null);
+            _mockedItemRepository.Setup(x => x.Get(item.Id)).ReturnsAsync((Item)null);
+
+            //Act
+            var result = await _itemService.Update(item);
+
+            //Assert
+            Assert.Null(result);
+        }
     }
 }
