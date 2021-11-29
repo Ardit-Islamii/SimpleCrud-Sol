@@ -31,7 +31,9 @@ namespace SimpleCrud.Repositories
 
         public async Task<Item> Get(Guid id)
         {
-            return await _context.Items.FindAsync(id);
+            Item item = await _context.Items.FindAsync(id);
+            _context.Entry(item).State = EntityState.Detached;
+            return item;
         }
 
         public async Task<Item> Update(Item item)
@@ -42,7 +44,7 @@ namespace SimpleCrud.Repositories
         }
         public async Task<bool> Save()
         {
-            return await _context.SaveChangesAsync() >= 0;
+            return await _context.SaveChangesAsync() > 0;
         }
     }
 }

@@ -40,7 +40,15 @@ namespace SimpleCrud.Services
 
         public async Task<Item> Update(Item item)
         {
-            return await _itemRepository.Update(item);
+            var existingItem = await _itemRepository.Get(item.Id);
+            if(existingItem != null)
+            {
+                return await _itemRepository.Update(item);
+            }
+            else
+            {
+                return item;
+            }
         }
     }
 }

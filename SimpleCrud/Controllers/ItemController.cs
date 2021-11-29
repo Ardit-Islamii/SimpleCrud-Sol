@@ -52,15 +52,14 @@ namespace SimpleCrud.Controllers
         [HttpPut("updateitem/{id}")]
         public async Task<IActionResult> UpdateItem(Guid id, [FromBody] Item item)
         {
-            var existingItem = await _itemService.Get(id);
-            if (existingItem != null)
+            var result = await _itemService.Update(item);
+            if(result != null)
             {
-                var result = await _itemService.Update(item);
                 return Accepted(result);
             }
             else
             {
-                return BadRequest();
+                return NotFound();
             }
         }
 
