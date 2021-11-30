@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using SimpleCrud.AsyncDataServices;
 using SimpleCrud.Contracts.Services;
 using SimpleCrud.Models;
 using System;
@@ -13,10 +15,14 @@ namespace SimpleCrud.Controllers
     public class ItemController : ControllerBase
     {
         private readonly IItemService _itemService;
+        private readonly ILogger _logger;
+        private readonly IMessageBusClient _messageBusClient;
 
-        public ItemController(IItemService itemService)
+        public ItemController(IItemService itemService, ILoggerFactory logger, IMessageBusClient messageBusClient)
         {
             _itemService = itemService;
+            _logger = logger.CreateLogger("ItemControllerLogger");
+            _messageBusClient = messageBusClient;
         }
         // GET api/<ValuesController>/5
         [HttpGet("{id}")]
@@ -25,10 +31,12 @@ namespace SimpleCrud.Controllers
             var result = await _itemService.Get(id); 
             if(result != null)
             {
+                _logger.LogInformation($"Successfully grabbed item: {result.Id}", result);
                 return Ok(result);
             }
             else
             {
+                _logger.LogInformation($"Could not find item with Id: {id}", id);
                 return NotFound();
             }
         }
@@ -40,10 +48,19 @@ namespace SimpleCrud.Controllers
            var result =  await _itemService.Create(item);
            if(result != null)
             {
+                _logger.LogInformation($"Successfully created item: {result}", result);
+                try
+                {
+                    _messageBusClient.PublishNewItem(item);
+                }catch(Exception ex)
+                {
+                    _logger.LogWarning($"--> Couldn't send message. Error: {ex.Message}", ex.Message);
+                }
                 return CreatedAtAction(nameof(Get), new { id = result.Id}, result);
             }
             else
             {
+                _logger.LogInformation("Could not create item");
                 return BadRequest();
             }
         }
@@ -55,10 +72,12 @@ namespace SimpleCrud.Controllers
             var result = await _itemService.Update(item);
             if(result != null)
             {
+                _logger.LogInformation($"Successfully updated item: {result.Id}", result.Id);
                 return Accepted(result);
             }
             else
             {
+                _logger.LogWarning($"Could not find item with Id: {id}", id);
                 return NotFound();
             }
         }
@@ -70,10 +89,12 @@ namespace SimpleCrud.Controllers
             var result = await _itemService.Delete(Id);
             if (result)
             {
+                _logger.LogInformation($"Successfully deleted item: {Id}", Id);
                 return Accepted();
             }
             else
             {
+                _logger.LogWarning($"Could not find item with Id: {Id}", Id);
                 return NoContent();
             }
         }

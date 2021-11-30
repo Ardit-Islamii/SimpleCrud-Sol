@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using SimpleCrud.AsyncDataServices;
 using SimpleCrud.Contracts.Repositories;
 using SimpleCrud.Contracts.Services;
 using SimpleCrud.Data;
@@ -36,6 +37,7 @@ namespace SimpleCrud
             options.UseSqlServer(Configuration.GetConnectionString("Connection-String")));
             services.AddTransient<IItemRepository, ItemRepository>();
             services.AddTransient<IItemService, ItemService>();
+            services.AddSingleton<IMessageBusClient, MessageBusClient>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
