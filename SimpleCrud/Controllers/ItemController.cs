@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SimpleCrud.AsyncDataServices;
 using SimpleCrud.Contracts.Services;
+using SimpleCrud.Dtos;
 using SimpleCrud.Models;
 using System;
 using System.Threading.Tasks;
@@ -17,12 +19,15 @@ namespace SimpleCrud.Controllers
         private readonly IItemService _itemService;
         private readonly ILogger _logger;
         private readonly IMessageBusClient _messageBusClient;
+        private readonly IMapper _mapper;
 
-        public ItemController(IItemService itemService, ILoggerFactory logger, IMessageBusClient messageBusClient)
+        public ItemController(IItemService itemService, ILoggerFactory logger, IMessageBusClient messageBusClient,
+            IMapper mapper)
         {
             _itemService = itemService;
             _logger = logger.CreateLogger("ItemControllerLogger");
             _messageBusClient = messageBusClient;
+            _mapper = mapper;
         }
         // GET api/<ValuesController>/5
         [HttpGet("{id}")]
@@ -49,13 +54,18 @@ namespace SimpleCrud.Controllers
            if(result != null)
             {
                 _logger.LogInformation($"Successfully created item: {result}", result);
+                var itemReadDto = _mapper.Map<ItemReadDto>(result);
+                itemReadDto.Event = "Item_Published";
+
+                //Send message async
                 try
                 {
-                    _messageBusClient.PublishNewItem(item);
+                    _messageBusClient.PublishNewItem(itemReadDto);
                 }catch(Exception ex)
                 {
-                    _logger.LogWarning($"--> Couldn't send message. Error: {ex.Message}", ex.Message);
+                    _logger.LogError($"--> Couldn't send message. Error: {ex.Message}", ex.Message);
                 }
+
                 return CreatedAtAction(nameof(Get), new { id = result.Id}, result);
             }
             else

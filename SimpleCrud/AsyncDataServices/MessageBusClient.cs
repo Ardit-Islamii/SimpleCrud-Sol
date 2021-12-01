@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
+using SimpleCrud.Dtos;
 using SimpleCrud.Models;
 using System;
 using System.Text;
@@ -37,7 +38,7 @@ namespace SimpleCrud.AsyncDataServices
                 _logger.LogWarning($"Couldn't connect to the message bus. --> Error: {ex.Message}", ex);
             }
         }
-        public void PublishNewItem(Item item)
+        public void PublishNewItem(ItemReadDto item)
         {
             var message = JsonSerializer.Serialize(item);
 
