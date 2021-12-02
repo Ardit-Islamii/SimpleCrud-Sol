@@ -2,6 +2,7 @@
 using SimpleCrud.Contracts.Services;
 using SimpleCrud.Models;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SimpleCrud.Services
@@ -36,6 +37,11 @@ namespace SimpleCrud.Services
         public async Task<Item> Get(Guid Id)
         {
             return await _itemRepository.Get(Id);
+        }
+
+        public async Task<List<Item>> Get()
+        {
+            return await _itemRepository.Get();
         }
 
         public async Task<Item> Update(Item item)

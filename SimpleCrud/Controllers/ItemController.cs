@@ -1,11 +1,15 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using SimpleCrud.AsyncDataServices;
 using SimpleCrud.Contracts.Services;
 using SimpleCrud.Dtos;
+using SimpleCrud.Extensions;
 using SimpleCrud.Models;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -20,14 +24,16 @@ namespace SimpleCrud.Controllers
         private readonly ILogger _logger;
         private readonly IMessageBusClient _messageBusClient;
         private readonly IMapper _mapper;
+        private readonly IDistributedCache _cache;
 
         public ItemController(IItemService itemService, ILoggerFactory logger, IMessageBusClient messageBusClient,
-            IMapper mapper)
+            IMapper mapper, IDistributedCache cache)
         {
             _itemService = itemService;
             _logger = logger.CreateLogger("ItemControllerLogger");
             _messageBusClient = messageBusClient;
             _mapper = mapper;
+            _cache = cache;
         }
         // GET api/<ValuesController>/5
         [HttpGet("{id}")]
@@ -44,6 +50,37 @@ namespace SimpleCrud.Controllers
                 _logger.LogInformation($"Could not find item with Id: {id}", id);
                 return NotFound();
             }
+        }
+
+        // GET api/<ValuesController>/
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            List<Item> itemsFromCache = new List<Item>();
+            var recordKey = "ItemList";
+            itemsFromCache = await _cache.GetRecordAsync<List<Item>>(recordKey);
+
+            if (itemsFromCache == null)
+            {
+                var itemsFromDatabase = await _itemService.Get();
+                if(itemsFromDatabase != null)
+                {
+                    await _cache.SetRecordAsync(recordKey, itemsFromDatabase);
+                    _logger.LogInformation($"Successfully grabbed items from database: {itemsFromDatabase}", itemsFromDatabase);
+                    return Ok(itemsFromDatabase);
+                }
+                else
+                {
+                    _logger.LogInformation($"Could not find any items...");
+                    return NoContent();
+                }
+            }
+            else
+            {
+                _logger.LogInformation($"Successfully grabbed items from cache: {itemsFromCache}", itemsFromCache);
+                return Ok(itemsFromCache);
+            }
+            
         }
 
         // POST api/<ValuesController>/createitem/itemTemplate

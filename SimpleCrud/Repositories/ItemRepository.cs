@@ -3,6 +3,7 @@ using SimpleCrud.Contracts.Repositories;
 using SimpleCrud.Data;
 using SimpleCrud.Models;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SimpleCrud.Repositories
@@ -45,6 +46,11 @@ namespace SimpleCrud.Repositories
         public async Task<bool> Save()
         {
             return await _context.SaveChangesAsync() > 0;
+        }
+
+        public async Task<List<Item>> Get()
+        {
+            return await _context.Items.ToListAsync();  
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using SimpleCrud.Models;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SimpleCrud.Contracts.Repositories
@@ -13,5 +14,7 @@ namespace SimpleCrud.Contracts.Repositories
         public Task<bool> Delete(Item identity);
 
         public Task<Item> Get(Guid id);
+        public Task<List<Item>> Get();
+
     }
 }
