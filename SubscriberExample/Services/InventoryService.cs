@@ -1,0 +1,45 @@
+﻿using Models;
+using SubscriberExample.Contracts.Repositories;
+using SubscriberExample.Contracts.Services;
+using System;
+using System.Threading.Tasks;
+
+namespace SubscriberExample.Services
+{
+    public class InventoryService : IInventoryService
+    {
+        private readonly IInventoryRepository _inventoryRepository;
+
+        public InventoryService(IInventoryRepository inventoryRepository)
+        {
+            _inventoryRepository = inventoryRepository;
+        }
+        public async Task<bool> DecrementItemQuantity(Guid itemId)
+        {
+            var inventory = await _inventoryRepository.FindByItemID(itemId);
+            if (inventory != null)
+            {
+                if(inventory.Quantity > 0)
+                {
+                    inventory.Quantity--;
+                    return await _inventoryRepository.DecrementItemQuantity(inventory);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        public async Task<Inventory> FindByItemID(Guid itemId)
+        {
+            return await _inventoryRepository.FindByItemID(itemId);
+        }
+
+        public async Task<Inventory> Get(Guid Id)
+        {
+            return await _inventoryRepository.Get(Id);
+        }
+    }
+}

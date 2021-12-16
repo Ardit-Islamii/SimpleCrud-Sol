@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simplecrud-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simplecrud
+  template:
+    metadata:
+      labels:
+        app: simplecrud
+    spec:
+      containers:
+        - name: simplecrud
+          image: arditislami/simplecrud:latest
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: simplecrud-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: simplecrud
+  ports:
+  - name: simplecrud
+    protocol: TCP
+    port: 80
+    targetPort: 80

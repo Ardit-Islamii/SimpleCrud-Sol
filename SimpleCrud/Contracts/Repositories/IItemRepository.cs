@@ -1,4 +1,5 @@
-﻿using SimpleCrud.Models;
+﻿using Models;
+using SimpleCrud.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

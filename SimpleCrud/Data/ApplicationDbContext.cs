@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Models;
 using SimpleCrud.Models;
 
 namespace SimpleCrud.Data
@@ -10,5 +11,6 @@ namespace SimpleCrud.Data
         {
         }
         public DbSet<Item> Items { get; set; }
+        public DbSet<Purchase> Purchases { get; set; }
     }
 }

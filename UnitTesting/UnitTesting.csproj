@@ -8,10 +8,23 @@
 
   <ItemGroup>
     <PackageReference Include="Confluent.Kafka" Version="1.8.2" />
+    <PackageReference Include="MassTransit" Version="7.3.0" />
+    <PackageReference Include="MassTransit.AspNetCore" Version="7.3.0" />
+    <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.3.0" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="7.3.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.21" />
     <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="3.1.21" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
     <PackageReference Include="Moq" Version="4.16.1" />
+    <PackageReference Include="NEST" Version="7.16.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="RabbitMQ.Client" Version="6.2.2" />
+    <PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
+    <PackageReference Include="Serilog.Enrichers.Environment" Version="2.2.0" />
+    <PackageReference Include="Serilog.Enrichers.Process" Version="2.0.2" />
+    <PackageReference Include="Serilog.Enrichers.Thread" Version="3.1.0" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="3.3.0" />
+    <PackageReference Include="Serilog.Sinks.Seq" Version="5.1.0" />
     <PackageReference Include="StackExchange.Redis" Version="2.2.88" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
@@ -26,6 +39,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SimpleCrud\SimpleCrud.csproj" />
+    <ProjectReference Include="..\SubscriberExample\SubscriberExample.csproj" />
   </ItemGroup>
 
 </Project>

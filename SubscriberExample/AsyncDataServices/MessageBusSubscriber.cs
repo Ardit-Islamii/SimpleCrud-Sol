@@ -1,4 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿/*
+
+    Commented out due to transferring to MassTransit
+ 
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
@@ -40,7 +44,6 @@ namespace SubscriberExample.AsyncDataServices
             _queueName = _channel.QueueDeclare().QueueName;
             _channel.QueueBind(queue: _queueName, exchange: "trigger", routingKey: "");
             _logger.LogInformation("--> Listening on the message bus...");
-
             _connection.ConnectionShutdown += RabbitMQ_ConnectionShutdown;
         }
 
@@ -60,7 +63,6 @@ namespace SubscriberExample.AsyncDataServices
             };
             _channel.BasicConsume(queue: _queueName, autoAck: true, consumer: consumer);
             return Task.CompletedTask;
-            
         }
 
         private void RabbitMQ_ConnectionShutdown(object sender, ShutdownEventArgs e)
@@ -79,3 +81,4 @@ namespace SubscriberExample.AsyncDataServices
         }
     }
 }
+*/

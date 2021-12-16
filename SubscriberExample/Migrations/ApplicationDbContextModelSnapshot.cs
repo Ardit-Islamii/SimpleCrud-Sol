@@ -19,24 +19,21 @@ namespace SubscriberExample.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("SubscriberExample.Models.Item", b =>
+            modelBuilder.Entity("Models.Inventory", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ExternalId")
+                    b.Property<Guid>("ItemId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Items");
+                    b.ToTable("Inventory");
                 });
 #pragma warning restore 612, 618
         }

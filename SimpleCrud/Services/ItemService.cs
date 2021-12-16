@@ -1,4 +1,5 @@
-﻿using SimpleCrud.Contracts.Repositories;
+﻿using Models;
+using SimpleCrud.Contracts.Repositories;
 using SimpleCrud.Contracts.Services;
 using SimpleCrud.Models;
 using System;
@@ -28,10 +29,7 @@ namespace SimpleCrud.Services
             {
                 return await _itemRepository.Delete(item);
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
         public async Task<Item> Get(Guid Id)
@@ -51,10 +49,7 @@ namespace SimpleCrud.Services
             {
                 return await _itemRepository.Update(item);
             }
-            else
-            {
-                return item;
-            }
+            return null;
         }
     }
 }

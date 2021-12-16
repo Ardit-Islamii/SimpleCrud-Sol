@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
+using Models;
 using SubscriberExample.Dtos;
-using SubscriberExample.Models;
+
 
 namespace SubscriberExample.Profiles
 {
@@ -9,8 +10,7 @@ namespace SubscriberExample.Profiles
         public SubscriberProfiles()
         {
             CreateMap<Item, ItemReadDto>();
-            CreateMap<ItemPublishedDto, Item>()
-                .ForMember(dest => dest.ExternalId, opt => opt.MapFrom(src => src.Id));
+            CreateMap<ItemPublishedDto, Item>();
         }
     }
 }

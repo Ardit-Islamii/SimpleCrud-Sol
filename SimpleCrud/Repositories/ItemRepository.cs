@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Models;
 using SimpleCrud.Contracts.Repositories;
 using SimpleCrud.Data;
 using SimpleCrud.Models;

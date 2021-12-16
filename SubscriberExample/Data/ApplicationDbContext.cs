@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SubscriberExample.Models;
+using Models;
 
 namespace SubscriberExample.Data
 {
@@ -9,6 +9,6 @@ namespace SubscriberExample.Data
             : base(options)
         {
         }
-        public DbSet<Item> Items { get; set; }
+        public DbSet<Inventory> Inventory { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using SimpleCrud.Models;
+﻿using Models;
+using SimpleCrud.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,7 +12,7 @@ namespace UnitTesting.Helper
         {
             return new Item()
             {
-                Id = Guid.NewGuid(),
+                Id = Guid.Parse("238b13ad-30e6-4e89-8a70-53071d994255"),
                 Name = "TestItem",
                 Price = 100.1m
             };

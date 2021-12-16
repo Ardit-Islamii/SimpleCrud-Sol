@@ -1,3 +1,4 @@
+using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -7,15 +8,21 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using SubscriberExample.AsyncDataServices;
+/*using SubscriberExample.AsyncDataServices;*/
+using SubscriberExample.Consumers;
 using SubscriberExample.Contracts.Repositories;
+using SubscriberExample.Contracts.Services;
 using SubscriberExample.Data;
 using SubscriberExample.EventProcessing;
 using SubscriberExample.Repositories;
+using SubscriberExample.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Refit;
+using SubscriberExample.DataAccess;
+using Serilog;
 
 namespace SubscriberExample
 {
@@ -34,10 +41,28 @@ namespace SubscriberExample
             services.AddControllers();
             services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("Connection-String")));
-            services.AddSingleton<IEventProcessor, EventProcessor>();
+            /*services.AddSingleton<IEventProcessor, EventProcessor>();*/
             services.AddAutoMapper(typeof(Startup));
-            services.AddScoped<IItemRepository, ItemRepository>();
-            services.AddHostedService<MessageBusSubscriber>();
+/*            services.AddScoped<IItemRepository, ItemRepository>();
+*/            /*services.AddHostedService<MessageBusSubscriber>();*/
+            services.AddTransient<IInventoryRepository, InventoryRepository>();
+            services.AddTransient<IInventoryService, InventoryService>();
+            services.AddMassTransit(config =>
+            {
+                config.AddConsumer<PurchaseConsumer>();
+                config.SetKebabCaseEndpointNameFormatter();
+                config.UsingRabbitMq((ctx, config) =>
+                {
+
+                    config.Host("amqp://guest:guest@localhost:5672");
+                    config.ConfigureEndpoints(ctx);
+                });
+            });
+            services.AddMassTransitHostedService();
+            services.AddRefitClient<IItemData>().ConfigureHttpClient(c =>
+            {
+                c.BaseAddress = new Uri(Configuration["ItemUri"]);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,6 +83,8 @@ namespace SubscriberExample
             {
                 endpoints.MapControllers();
             });
+
+            app.UseSerilogRequestLogging();
         }
     }
 }
