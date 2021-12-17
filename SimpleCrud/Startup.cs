@@ -1,28 +1,22 @@
+using System;
 using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using OrderService.Contracts.Repositories;
+using OrderService.Contracts.Services;
+using OrderService.Data;
+using OrderService.DataAccess;
+using OrderService.Repositories;
+using OrderService.Services;
+using OrderService.SyncDataServices.Http;
 using Refit;
-using SimpleCrud.AsyncDataServices;
-using SimpleCrud.Contracts.Repositories;
-using SimpleCrud.Contracts.Services;
-using SimpleCrud.Data;
-using SimpleCrud.DataAccess;
-using SimpleCrud.Repositories;
-using SimpleCrud.Services;
-using SimpleCrud.SyncDataServices.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Serilog;
-namespace SimpleCrud
+
+namespace OrderService
 {
     public class Startup
     {
@@ -40,20 +34,23 @@ namespace SimpleCrud
             services.AddControllers();
             services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("Connection-String")));
-            /*services.AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase("InMem"));*/
             services.AddTransient<IItemRepository, ItemRepository>();
             services.AddTransient<IItemService, ItemService>();
             services.AddTransient<IPurchaseRepository, PurchaseRepository>();
             services.AddTransient<IPurchaseService, PurchaseService>();
-            services.AddSingleton<IMessageBusClient, MessageBusClient>();
             services.AddAutoMapper(typeof(Startup));
-            services.AddHttpClient<ISubscriberExampleDataClient, HttpSubscriberExampleDataClient>();
-            services.AddRefitClient<IInventoryData>().ConfigureHttpClient(cfg =>
+            services.AddHttpClient<IInventoryServiceDataClient, InventoryServiceDataClient>();
+            services.AddRefitClient<IInventoryClientProvider>().ConfigureHttpClient(cfg =>
             {
                 cfg.BaseAddress = new Uri(Configuration["InventoryUri"]);
             });
+
+            /* Commented out due to transferring to MassTransit instead of pure RabbitMQ
+             * services.AddSingleton<IMessageBusClient, MessageBusClient>();*/
+
             /* Commented out due to not being implemented yet.
              * services.AddHostedService<KafkaProducerBackgroundService>();*/
+
             services.AddStackExchangeRedisCache(options =>
             {
                 options.Configuration = Configuration.GetConnectionString("Redis");

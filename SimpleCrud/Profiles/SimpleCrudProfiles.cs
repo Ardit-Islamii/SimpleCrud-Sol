@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
 using Models;
-using SimpleCrud.Dtos;
-using SimpleCrud.Models;
+using OrderService.Dtos;
 
-namespace SimpleCrud.Profiles
+namespace OrderService.Profiles
 {
     public class SimpleCrudProfiles : Profile
     {

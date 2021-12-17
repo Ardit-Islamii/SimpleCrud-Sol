@@ -1,10 +1,9 @@
-﻿using Models;
-using SimpleCrud.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Models;
 
-namespace SimpleCrud.Contracts.Services
+namespace OrderService.Contracts.Services
 {
     public interface IItemService
     {

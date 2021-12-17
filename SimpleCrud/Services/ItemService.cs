@@ -1,12 +1,11 @@
-﻿using Models;
-using SimpleCrud.Contracts.Repositories;
-using SimpleCrud.Contracts.Services;
-using SimpleCrud.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Models;
+using OrderService.Contracts.Repositories;
+using OrderService.Contracts.Services;
 
-namespace SimpleCrud.Services
+namespace OrderService.Services
 {
     public class ItemService : IItemService
     {

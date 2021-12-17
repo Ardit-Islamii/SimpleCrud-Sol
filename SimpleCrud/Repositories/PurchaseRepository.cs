@@ -1,9 +1,9 @@
-﻿using SimpleCrud.Contracts.Repositories;
-using SimpleCrud.Data;
-using SimpleCrud.Models;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Models;
+using OrderService.Contracts.Repositories;
+using OrderService.Data;
 
-namespace SimpleCrud.Repositories
+namespace OrderService.Repositories
 {
     public class PurchaseRepository : IPurchaseRepository
     {

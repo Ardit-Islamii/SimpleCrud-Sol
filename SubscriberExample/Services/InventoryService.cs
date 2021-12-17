@@ -1,10 +1,10 @@
-﻿using Models;
-using SubscriberExample.Contracts.Repositories;
-using SubscriberExample.Contracts.Services;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using InventoryService.Contracts.Repositories;
+using InventoryService.Contracts.Services;
+using Models;
 
-namespace SubscriberExample.Services
+namespace InventoryService.Services
 {
     public class InventoryService : IInventoryService
     {

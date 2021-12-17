@@ -1,13 +1,12 @@
 ﻿using AutoMapper;
+using InventoryService.Dtos;
 using Models;
-using SubscriberExample.Dtos;
 
-
-namespace SubscriberExample.Profiles
+namespace InventoryService.Profiles
 {
-    public class SubscriberProfiles : Profile
+    public class ItemProfiles : Profile
     {
-        public SubscriberProfiles()
+        public ItemProfiles()
         {
             CreateMap<Item, ItemReadDto>();
             CreateMap<ItemPublishedDto, Item>();

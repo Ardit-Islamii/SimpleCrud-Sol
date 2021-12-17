@@ -1,23 +1,23 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using SimpleCrud.Dtos;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using OrderService.Dtos;
 
-namespace SimpleCrud.SyncDataServices.Http
+namespace OrderService.SyncDataServices.Http
 {
-    public class HttpSubscriberExampleDataClient : ISubscriberExampleDataClient
+    public class InventoryServiceDataClient : IInventoryServiceDataClient
     {
         private readonly HttpClient _httpClient;
         private readonly ILogger _logger;
         private readonly IConfiguration _configuration;
 
-        public HttpSubscriberExampleDataClient(HttpClient httpClient, ILoggerFactory logger, IConfiguration configuration)
+        public InventoryServiceDataClient(HttpClient httpClient, ILoggerFactory logger, IConfiguration configuration)
         {
             _httpClient = httpClient;
-            _logger = logger.CreateLogger("HttpSubExampleDataClient");
+            _logger = logger.CreateLogger("InventoryServiceDataClient");
             _configuration = configuration;
         }
         public async Task SendItemToSubExample(ItemReadDto item)
@@ -30,11 +30,11 @@ namespace SimpleCrud.SyncDataServices.Http
 
             if (response.IsSuccessStatusCode)
             {
-                _logger.LogInformation("--> Sync POST to SubscriberExample was OK!");
+                _logger.LogInformation("--> Sync POST to InventoryService was OK!");
             }
             else
             {
-                _logger.LogWarning("--> Couldn't sync POST to SubscriberExample.");
+                _logger.LogWarning("--> Couldn't sync POST to InventoryService.");
             }
         }
     }

@@ -1,7 +1,8 @@
 ﻿using System;
 
-namespace SubscriberExample.Dtos
+namespace InventoryService.Dtos
 {
+    // Unused code for now.
     public class ItemPublishedDto
     {
         public Guid Id { get; set; }

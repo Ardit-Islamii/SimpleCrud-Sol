@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SimpleCrud.Dtos
+namespace OrderService.Dtos
 {
     public class ItemReadDto
     {

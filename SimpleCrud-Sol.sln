@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleCrud", "SimpleCrud\SimpleCrud.csproj", "{4A27E9E4-E17E-4F3C-A6FF-1897F2BE0598}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderService", "SimpleCrud\OrderService.csproj", "{4A27E9E4-E17E-4F3C-A6FF-1897F2BE0598}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTesting", "UnitTesting\UnitTesting.csproj", "{8D439CEE-8868-40AD-BB25-669FE2920914}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SubscriberExample", "SubscriberExample\SubscriberExample.csproj", "{E54141D4-6C7B-42AB-80BE-530422FDB167}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InventoryService", "SubscriberExample\InventoryService.csproj", "{E54141D4-6C7B-42AB-80BE-530422FDB167}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csproj", "{EA21526D-DDF4-48A0-A111-E81A0F0E0CA2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csproj", "{EA21526D-DDF4-48A0-A111-E81A0F0E0CA2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

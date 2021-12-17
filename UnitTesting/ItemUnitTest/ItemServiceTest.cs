@@ -1,12 +1,11 @@
 ﻿using Models;
 using Moq;
-using SimpleCrud.Contracts.Repositories;
-using SimpleCrud.Models;
-using SimpleCrud.Services;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using OrderService.Contracts.Repositories;
+using OrderService.Services;
 using UnitTesting.Helper;
 using Xunit;
 

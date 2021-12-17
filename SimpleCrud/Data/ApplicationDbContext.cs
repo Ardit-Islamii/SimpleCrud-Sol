@@ -1,8 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Models;
-using SimpleCrud.Models;
 
-namespace SimpleCrud.Data
+namespace OrderService.Data
 {
     public class ApplicationDbContext : DbContext
     {

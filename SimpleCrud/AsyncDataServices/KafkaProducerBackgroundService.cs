@@ -1,8 +1,4 @@
-﻿/*
- 
-    Commented out due to not knowing how to implement it correctly
-
-using Confluent.Kafka;
+﻿using Confluent.Kafka;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -10,9 +6,10 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SimpleCrud.AsyncDataServices
+namespace OrderService.AsyncDataServices
 {
-    public class KafkaProducerBackgroundService :  BackgroundService
+    /* UNUSED CODE, NOT IMPLEMENTED PROPERLY YET. */
+    public class KafkaProducerBackgroundService : BackgroundService
     {
         private readonly ILogger _logger;
         private readonly IConfiguration _config;
@@ -31,7 +28,7 @@ namespace SimpleCrud.AsyncDataServices
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            for(var i = 0; i < 100; i++)
+            for (var i = 0; i < 100; i++)
             {
                 var value = $"Hello World {i}";
                 _logger.LogInformation(value);
@@ -41,8 +38,7 @@ namespace SimpleCrud.AsyncDataServices
                 }, stoppingToken);
             }
             _producer.Flush(TimeSpan.FromSeconds(10));
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }
-*/

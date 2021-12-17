@@ -1,11 +1,10 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using System.Linq;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Models;
-using SimpleCrud.Models;
-using System;
-using System.Linq;
 
-namespace SimpleCrud.Data
+namespace OrderService.Data
 {
     public static class PrepDB
     {

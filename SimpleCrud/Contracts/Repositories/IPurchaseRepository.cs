@@ -1,7 +1,7 @@
-﻿using SimpleCrud.Models;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Models;
 
-namespace SimpleCrud.Contracts.Repositories
+namespace OrderService.Contracts.Repositories
 {
     public interface IPurchaseRepository
     {

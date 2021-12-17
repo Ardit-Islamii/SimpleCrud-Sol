@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Models;
 
-namespace SubscriberExample.Data
+namespace InventoryService.Data
 {
     public class ApplicationDbContext : DbContext
     {

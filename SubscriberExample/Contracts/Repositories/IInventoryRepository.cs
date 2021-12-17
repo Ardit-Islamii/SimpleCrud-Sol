@@ -1,8 +1,8 @@
-﻿using Models;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using Models;
 
-namespace SubscriberExample.Contracts.Repositories
+namespace InventoryService.Contracts.Repositories
 {
     public interface IInventoryRepository
     {

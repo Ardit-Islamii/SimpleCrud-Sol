@@ -1,9 +1,8 @@
 ﻿using Moq;
-using SubscriberExample.Contracts.Repositories;
-using SubscriberExample.Services;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using InventoryService.Contracts.Repositories;
 using Xunit;
 using UnitTesting.Helper;
 using Models;
@@ -13,13 +12,13 @@ namespace UnitTesting.InventoryUnitTest
     public class InventoryServiceTest
     {
         private readonly Mock<IInventoryRepository> _mockedInventoryRepository;
-        private readonly InventoryService _sut;
+        private readonly InventoryService.Services.InventoryService _sut;
         Inventory inventory = InventoryHelper.InventoryData();
         Item item = ItemHelper.ItemData();
         public InventoryServiceTest()
         {
             _mockedInventoryRepository = new Mock<IInventoryRepository>();
-            _sut = new InventoryService(_mockedInventoryRepository.Object);
+            _sut = new InventoryService.Services.InventoryService(_mockedInventoryRepository.Object);
         }
         [Fact]
         public async void DecrementItemQuantity_MoreThanZeroQuantity_ItemQuantityDecreased()

@@ -1,12 +1,12 @@
-﻿using Models;
-using Refit;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Models;
+using Refit;
 
-namespace SubscriberExample.DataAccess
+namespace InventoryService.DataAccess
 {
-    public interface IItemData
+    public interface IItemClientProvider
     {
         [Get("")]
         public Task<List<Item>> GetItems();

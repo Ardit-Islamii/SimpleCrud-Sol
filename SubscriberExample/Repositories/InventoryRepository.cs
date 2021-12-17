@@ -1,12 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Models;
-using SubscriberExample.Contracts.Repositories;
-using SubscriberExample.Data;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using InventoryService.Contracts.Repositories;
+using InventoryService.Data;
+using Microsoft.EntityFrameworkCore;
+using Models;
 
-namespace SubscriberExample.Repositories
+namespace InventoryService.Repositories
 {
     public class InventoryRepository : IInventoryRepository
     {

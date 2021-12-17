@@ -1,12 +1,10 @@
-﻿using MassTransit;
-using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using InventoryService.Contracts.Services;
+using MassTransit;
 using Microsoft.Extensions.Logging;
 using Models;
-using SimpleCrud.Models;
-using SubscriberExample.Contracts.Services;
-using System.Threading.Tasks;
 
-namespace SubscriberExample.Consumers
+namespace InventoryService.Consumers
 {
     public class PurchaseConsumer : IConsumer<Purchase>
     {
@@ -19,10 +17,10 @@ namespace SubscriberExample.Consumers
             _inventoryService = inventoryService;
         }
         public async Task Consume(ConsumeContext<Purchase> context)
-        {
-            _logger.LogInformation($"--> Logging information about {context.Message.ItemId}");
-            var result =  await _inventoryService.DecrementItemQuantity(context.Message.ItemId);
-            _logger.LogInformation("--> Inventory item amount " + ((result) ? "was decreased by 1": "could not be decreased at all"));
+        {   
+            _logger.LogInformation($"--> Successfully consumed purchase on item: {context.Message.ItemId}");
+            bool result =  await _inventoryService.DecrementItemQuantity(context.Message.ItemId);
+            _logger.LogInformation("--> Item amount " + ((result) ? "was decreased by 1": "could not be decreased at all"));
         }
     }
 }

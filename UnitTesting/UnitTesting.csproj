@@ -38,8 +38,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SimpleCrud\SimpleCrud.csproj" />
-    <ProjectReference Include="..\SubscriberExample\SubscriberExample.csproj" />
+    <ProjectReference Include="..\SimpleCrud\OrderService.csproj" />
+    <ProjectReference Include="..\SubscriberExample\InventoryService.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="PurchaseUnitTest\" />
   </ItemGroup>
 
 </Project>
