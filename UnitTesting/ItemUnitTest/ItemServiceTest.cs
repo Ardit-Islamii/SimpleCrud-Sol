@@ -1,11 +1,11 @@
-﻿using Moq;
-using SimpleCrud.Contracts.Repositories;
-using SimpleCrud.Models;
-using SimpleCrud.Services;
+﻿using Models;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using OrderService.Contracts.Repositories;
+using OrderService.Services;
 using UnitTesting.Helper;
 using Xunit;
 
@@ -97,9 +97,9 @@ namespace UnitTesting.ItemUnitTest
         public async Task UpdateItemAsync_ValidData_ItemNotFound()
         {
             //Arrange
-            _mockedItemRepository.Setup(x => x.Update(item)).ReturnsAsync((Item)null);
             _mockedItemRepository.Setup(x => x.Get(item.Id)).ReturnsAsync((Item)null);
-
+            _mockedItemRepository.Setup(x => x.Update(item)).ReturnsAsync((Item)null);
+            
             //Act
             var result = await _itemService.Update(item);
 

@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.Caching.Distributed;
-using System;
+﻿using System;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Distributed;
 
-namespace SimpleCrud.Extensions
+namespace OrderService.Extensions
 {
     public static class DistributedCacheExtensions
     {

@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: subscriberexample-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: subscriberexample
+  template:
+    metadata:
+      labels:
+        app: subscriberexample
+    spec:
+      containers:
+        - name: subscriberexample
+          image: arditislami/subscriberexample:latest
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: subscriberexample-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: subscriberexample
+  ports:
+  - name: subscriberexample
+    protocol: TCP
+    port: 80
+    targetPort: 80 

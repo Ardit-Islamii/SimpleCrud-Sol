@@ -1,14 +1,14 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using RabbitMQ.Client;
-using SimpleCrud.Dtos;
-using SimpleCrud.Models;
-using System;
+﻿using System;
 using System.Text;
 using System.Text.Json;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using OrderService.Dtos;
+using RabbitMQ.Client;
 
-namespace SimpleCrud.AsyncDataServices
+namespace OrderService.AsyncDataServices
 {
+    /* UNUSED CODE, TRANSFERRED TO MASSTRANSIT. */
     public class MessageBusClient : IMessageBusClient
     {
         private readonly IConfiguration _configuration;

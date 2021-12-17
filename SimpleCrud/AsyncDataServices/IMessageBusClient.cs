@@ -1,7 +1,6 @@
-﻿using SimpleCrud.Dtos;
-using SimpleCrud.Models;
+﻿using OrderService.Dtos;
 
-namespace SimpleCrud.AsyncDataServices
+namespace OrderService.AsyncDataServices
 {
     public interface IMessageBusClient
     {

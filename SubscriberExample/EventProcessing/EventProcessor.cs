@@ -1,6 +1,11 @@
-﻿using AutoMapper;
+﻿/*
+
+  Commented out due to transferring to MassTransit. 
+
+using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Models;
 using SubscriberExample.Contracts.Repositories;
 using SubscriberExample.Contracts.Services;
 using SubscriberExample.Dtos;
@@ -70,7 +75,8 @@ namespace SubscriberExample.EventProcessing
                     {
                         _logger.LogInformation("--> Item already exists");
                     }
-                }catch(Exception ex)
+                }
+                catch (Exception ex)
                 {
                     _logger.LogError($"--> Could not add item to db. Error: {ex.Message}", ex);
                 }
@@ -83,3 +89,4 @@ namespace SubscriberExample.EventProcessing
         Undetermined
     }
 }
+*/

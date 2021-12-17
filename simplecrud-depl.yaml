@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simplecrud-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simplecrud
+  template:
+    metadata:
+      labels:
+        app: simplecrud
+    spec:
+      containers:
+        - name: platformservice
+          image: arditislami/simplecrud:latest

@@ -1,23 +1,22 @@
+using System;
+using InventoryService.Consumers;
+using InventoryService.Contracts.Repositories;
+using InventoryService.Contracts.Services;
+using InventoryService.Data;
+using InventoryService.DataAccess;
+using InventoryService.Repositories;
+using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using SubscriberExample.AsyncDataServices;
-using SubscriberExample.Contracts.Repositories;
-using SubscriberExample.Data;
-using SubscriberExample.EventProcessing;
-using SubscriberExample.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Refit;
+using Serilog;
+//using SubscriberExample.AsyncDataServices;
 
-namespace SubscriberExample
+namespace InventoryService
 {
     public class Startup
     {
@@ -34,10 +33,31 @@ namespace SubscriberExample
             services.AddControllers();
             services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("Connection-String")));
-            services.AddSingleton<IEventProcessor, EventProcessor>();
             services.AddAutoMapper(typeof(Startup));
-            services.AddScoped<IItemRepository, ItemRepository>();
+
+            /*  Commented out due to transferring to MassTransit instead of using pure RabbitMQ
             services.AddHostedService<MessageBusSubscriber>();
+            services.AddSingleton<IEventProcessor, EventProcessor>();*/
+
+            services.AddTransient<IInventoryRepository, InventoryRepository>();
+            services.AddTransient<IInventoryService, Services.InventoryService>();
+
+            services.AddMassTransit(config =>
+            {
+                config.AddConsumer<PurchaseConsumer>();
+                config.SetKebabCaseEndpointNameFormatter();
+                config.UsingRabbitMq((ctx, config) =>
+                {
+                    config.Host("amqp://guest:guest@localhost:5672");
+                    config.ConfigureEndpoints(ctx);
+                });
+            });
+            services.AddMassTransitHostedService();
+
+            services.AddRefitClient<IItemClientProvider>().ConfigureHttpClient(c =>
+            {
+                c.BaseAddress = new Uri(Configuration["ItemUri"]);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,6 +78,8 @@ namespace SubscriberExample
             {
                 endpoints.MapControllers();
             });
+
+            app.UseSerilogRequestLogging();
         }
     }
 }

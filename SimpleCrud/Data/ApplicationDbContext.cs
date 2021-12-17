@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SimpleCrud.Models;
+using Models;
 
-namespace SimpleCrud.Data
+namespace OrderService.Data
 {
     public class ApplicationDbContext : DbContext
     {
@@ -10,5 +10,6 @@ namespace SimpleCrud.Data
         {
         }
         public DbSet<Item> Items { get; set; }
+        public DbSet<Purchase> Purchases { get; set; }
     }
 }

@@ -1,12 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SimpleCrud.Contracts.Repositories;
-using SimpleCrud.Data;
-using SimpleCrud.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Models;
+using OrderService.Contracts.Repositories;
+using OrderService.Data;
 
-namespace SimpleCrud.Repositories
+namespace OrderService.Repositories
 {
     public class ItemRepository : IItemRepository
     {
