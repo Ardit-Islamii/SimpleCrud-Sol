@@ -1,9 +1,9 @@
-﻿using System;
+﻿using OrderService.Contracts.Repositories;
+using OrderService.Contracts.Services;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Models;
-using OrderService.Contracts.Repositories;
-using OrderService.Contracts.Services;
 
 namespace OrderService.Services
 {
@@ -28,7 +28,10 @@ namespace OrderService.Services
             {
                 return await _itemRepository.Delete(item);
             }
-            return false;
+            else
+            {
+                return false;
+            }
         }
 
         public async Task<Item> Get(Guid Id)
@@ -48,7 +51,10 @@ namespace OrderService.Services
             {
                 return await _itemRepository.Update(item);
             }
-            return null;
+            else
+            {
+                return item;
+            }
         }
     }
 }

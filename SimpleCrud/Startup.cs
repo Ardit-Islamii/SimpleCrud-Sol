@@ -1,4 +1,5 @@
 using System;
+using Elasticsearch.Net;
 using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -6,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Models;
+using Nest;
 using OrderService.Contracts.Repositories;
 using OrderService.Contracts.Services;
 using OrderService.Data;
@@ -38,6 +41,15 @@ namespace OrderService
             services.AddTransient<IItemService, ItemService>();
             services.AddTransient<IPurchaseRepository, PurchaseRepository>();
             services.AddTransient<IPurchaseService, PurchaseService>();
+            services.AddSingleton<IElasticClient>(sp =>
+            {
+                var config = sp.GetRequiredService<IConfiguration>();
+                var settings = new ConnectionSettings(config["cloudId"],
+                    new BasicAuthenticationCredentials("elastic", config["password"]))
+                    .DefaultIndex("an-example-index")
+                    .DefaultMappingFor<Purchase>(i => i.IndexName("purchase-demo-v1"));
+                return new ElasticClient(settings);
+            });
             services.AddAutoMapper(typeof(Startup));
             services.AddHttpClient<IInventoryServiceDataClient, InventoryServiceDataClient>();
             services.AddRefitClient<IInventoryClientProvider>().ConfigureHttpClient(cfg =>

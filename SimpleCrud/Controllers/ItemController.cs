@@ -90,7 +90,7 @@ namespace OrderService.Controllers
                     await _subscriberClient.SendItemToSubExample(itemReadDto);
                 }catch(Exception ex)
                 {
-                    _logger.LogInformation($"--> Could not send synchronously: {ex.Message}");
+                    _logger.LogError($"--> Could not send synchronously: {ex.Message}", ex);
                 }
 
                 //Send message async using RabbitMQ -  Commented out due to not being relevant anymore.

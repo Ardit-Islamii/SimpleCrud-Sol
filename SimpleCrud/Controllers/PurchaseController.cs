@@ -5,6 +5,7 @@ using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Models;
+using Nest;
 using OrderService.Contracts.Services;
 using OrderService.DataAccess;
 using OrderService.Dtos;
@@ -22,12 +23,15 @@ namespace OrderService.Controllers
         private readonly IItemService _itemService;
         private readonly IInventoryClientProvider _inventoryData;
         private readonly ILogger<PurchaseController> _logger;
+        private readonly IElasticClient _client;
         private CancellationTokenSource cancellationTokenSource;
         private CancellationToken cancellationToken;
+        
 
         public PurchaseController(IPurchaseService purchaseService, IPublishEndpoint publish, IItemService itemService,
             IInventoryClientProvider inventoryData,
-            ILogger<PurchaseController> logger
+            ILogger<PurchaseController> logger,
+            IElasticClient client
             )
         {
             _publish = publish;
@@ -35,6 +39,7 @@ namespace OrderService.Controllers
             _itemService = itemService;
             _inventoryData = inventoryData;
             _logger = logger;
+            _client = client;
             cancellationTokenSource = new CancellationTokenSource();
             cancellationToken = cancellationTokenSource.Token;
         }
@@ -53,6 +58,12 @@ namespace OrderService.Controllers
                 {
                     await _publish.Publish<Purchase>(result);
                     _logger.LogInformation("--> Published a purchase entity to the InventoryService");
+
+                    var response = await _client.IndexDocumentAsync(result, cancellationToken);
+                    if (response.IsValid)
+                    {
+                        _logger.LogInformation(response.Id);
+                    }
                 }
                 catch (Exception ex)
                 {
