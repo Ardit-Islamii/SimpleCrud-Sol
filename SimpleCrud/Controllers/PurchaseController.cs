@@ -56,9 +56,11 @@ namespace OrderService.Controllers
                 Purchase result = await _purchaseService.Create(item);
                 try
                 {
+                    //Publishing using MassTransit
                     await _publish.Publish<Purchase>(result);
                     _logger.LogInformation("--> Published a purchase entity to the InventoryService");
 
+                    //Indexing to Kibana
                     var response = await _client.IndexDocumentAsync(result, cancellationToken);
                     if (response.IsValid)
                     {

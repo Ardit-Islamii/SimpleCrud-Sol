@@ -22,19 +22,19 @@ namespace OrderService.Controllers
         private readonly ILogger _logger;
         /*private readonly IMessageBusClient _messageBusClient;*/
         private readonly IMapper _mapper;
-        private readonly IInventoryServiceDataClient _subscriberClient;
+        private readonly IInventoryServiceDataClient _inventoryClient;
         private readonly IDistributedCache _cache;
 
         public ItemController(IItemService itemService, ILoggerFactory logger /*IMessageBusClient messageBusClient*/,
             IMapper mapper, IDistributedCache cache,
-            IInventoryServiceDataClient subscriberClient)
+            IInventoryServiceDataClient inventoryClient)
         {
             _itemService = itemService;
             _logger = logger.CreateLogger("ItemControllerLogger");
             /*_messageBusClient = messageBusClient;*/
             _mapper = mapper;
             _cache = cache;
-            _subscriberClient = subscriberClient;
+            _inventoryClient = inventoryClient;
         }
         // GET api/<ValuesController>/5
         [HttpGet("{id}")]
@@ -87,7 +87,7 @@ namespace OrderService.Controllers
                 //Send message sync using httpclient
                 try
                 {
-                    await _subscriberClient.SendItemToSubExample(itemReadDto);
+                    await _inventoryClient.SendItemToSubExample(itemReadDto);
                 }catch(Exception ex)
                 {
                     _logger.LogError($"--> Could not send synchronously: {ex.Message}", ex);
