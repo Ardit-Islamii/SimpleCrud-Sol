@@ -74,7 +74,6 @@ namespace OrderService
                 config.UsingRabbitMq((ctx, config) =>
                 {
                     config.Host("amqp://guest:guest@localhost:5672");
-
                 });
             });
             services.AddMassTransitHostedService();

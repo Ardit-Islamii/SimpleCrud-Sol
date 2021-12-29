@@ -1,4 +1,5 @@
 using System;
+using GreenPipes;
 using InventoryService.Consumers;
 using InventoryService.Contracts.Repositories;
 using InventoryService.Contracts.Services;
@@ -14,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Refit;
 using Serilog;
+using GreenPipes;
 //using SubscriberExample.AsyncDataServices;
 
 namespace InventoryService
@@ -42,9 +44,14 @@ namespace InventoryService
             services.AddTransient<IInventoryRepository, InventoryRepository>();
             services.AddTransient<IInventoryService, Services.InventoryService>();
 
+            
+            //MassTransit configuration
             services.AddMassTransit(config =>
             {
-                config.AddConsumer<PurchaseConsumer>();
+                config.AddConsumer<PurchaseConsumer>(config =>
+                {
+                    config.UseMessageRetry(r => r.Incremental(2, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(2)));
+                });
                 config.SetKebabCaseEndpointNameFormatter();
                 config.UsingRabbitMq((ctx, config) =>
                 {
@@ -54,6 +61,7 @@ namespace InventoryService
             });
             services.AddMassTransitHostedService();
 
+            //Refit configuration
             services.AddRefitClient<IItemClientProvider>().ConfigureHttpClient(c =>
             {
                 c.BaseAddress = new Uri(Configuration["ItemUri"]);
