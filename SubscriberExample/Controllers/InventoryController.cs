@@ -31,7 +31,7 @@ namespace InventoryService.Controllers
             try
             {
                 //Delaying task purposefully to test the cancellation token.
-                await Task.Delay(4000);
+                /*await Task.Delay(4000);*/
                 var inventoryItem = await _inventoryService.FindByItemID(itemId);
                 if (inventoryItem != null)
                 {

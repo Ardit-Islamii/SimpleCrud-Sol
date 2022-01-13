@@ -13,7 +13,10 @@ using OrderService.Extensions;
 using OrderService.SyncDataServices.Http;
 
 namespace OrderService.Controllers
-{
+{   
+    /// <summary>
+    /// The controller for item crud.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class ItemController : ControllerBase
@@ -36,6 +39,12 @@ namespace OrderService.Controllers
             _cache = cache;
             _inventoryClient = inventoryClient;
         }
+
+        /// <summary>
+        /// Gets an item from the inventory table based on the id of the item.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // GET api/<ValuesController>/5
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
@@ -50,6 +59,11 @@ namespace OrderService.Controllers
             return NotFound();
         }
 
+        /// <summary>
+        /// Gets all the items from the inventory table.
+        /// First it tries to get them from cache and if that fails it gets them from the database then caches them for 60 seconds.
+        /// </summary>
+        /// <returns></returns>
         // GET api/<ValuesController>/
         [HttpGet]
         public async Task<IActionResult> Get()
@@ -73,6 +87,11 @@ namespace OrderService.Controllers
             return Ok(itemsFromCache);
         }
 
+        /// <summary>
+        /// Creates a new item inside the Items table.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         // POST api/<ValuesController>/createitem/itemTemplate
         [HttpPost("createitem/")]
         public async Task<IActionResult> CreateItem([FromBody] Item item)
@@ -108,6 +127,12 @@ namespace OrderService.Controllers
            return BadRequest();
         }
 
+        /// <summary>
+        /// Updates an item inside the Items table.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="item"></param>
+        /// <returns></returns>
         // PUT api/<ValuesController>/5
         [HttpPut("updateitem/{id}")]
         public async Task<IActionResult> UpdateItem(Guid id, [FromBody] Item item)
@@ -122,6 +147,11 @@ namespace OrderService.Controllers
             return NotFound();
         }
 
+        /// <summary>
+        /// Deletes an item from Items table.
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns></returns>
         // DELETE api/<ValuesController>/5
         [HttpDelete("deleteitem/{id}")]
         public async Task<IActionResult> DeleteItem(Guid Id)

@@ -24,11 +24,8 @@ namespace InventoryService.Services
                     inventory.Quantity--;
                     return await _inventoryRepository.DecrementItemQuantity(inventory);
                 }
-                else
-                {
                     return false;
                 }
-            }
             return false;
         }
 

@@ -53,7 +53,7 @@ namespace OrderService.Services
             }
             else
             {
-                return item;
+                return null;
             }
         }
     }

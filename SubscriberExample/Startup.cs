@@ -50,7 +50,7 @@ namespace InventoryService
             {
                 config.AddConsumer<PurchaseConsumer>(config =>
                 {
-                    config.UseMessageRetry(r => r.Incremental(2, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(2)));
+                    config.UseMessageRetry(r => r.Incremental(3, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1)));
                 });
                 config.SetKebabCaseEndpointNameFormatter();
                 config.UsingRabbitMq((ctx, config) =>

@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.Reflection;
 using Elasticsearch.Net;
 using MassTransit;
 using Microsoft.AspNetCore.Builder;
@@ -7,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using Models;
 using Nest;
 using OrderService.Contracts.Repositories;
@@ -35,12 +38,15 @@ namespace OrderService
         {
 
             services.AddControllers();
+
             services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("Connection-String")));
+
             services.AddTransient<IItemRepository, ItemRepository>();
             services.AddTransient<IItemService, ItemService>();
             services.AddTransient<IPurchaseRepository, PurchaseRepository>();
             services.AddTransient<IPurchaseService, PurchaseService>();
+
             services.AddSingleton<IElasticClient>(sp =>
             {
                 var config = sp.GetRequiredService<IConfiguration>();
@@ -50,6 +56,7 @@ namespace OrderService
                     .DefaultMappingFor<Purchase>(i => i.IndexName("purchase-demo-v1"));
                 return new ElasticClient(settings);
             });
+
             services.AddAutoMapper(typeof(Startup));
             services.AddHttpClient<IInventoryServiceDataClient, InventoryServiceDataClient>();
             services.AddRefitClient<IInventoryClientProvider>().ConfigureHttpClient(cfg =>
@@ -57,7 +64,7 @@ namespace OrderService
                 cfg.BaseAddress = new Uri(Configuration["InventoryUri"]);
             });
 
-            /* Commented out due to transferring to MassTransit instead of pure RabbitMQ
+            /* Commented out due to using MassTransit instead of pure RabbitMQ
              * services.AddSingleton<IMessageBusClient, MessageBusClient>();*/
 
             /* Commented out due to not being implemented yet.
@@ -77,6 +84,19 @@ namespace OrderService
                 });
             });
             services.AddMassTransitHostedService();
+
+            services.AddSwaggerGen(cfg =>
+            {
+                cfg.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Swagger API",
+                    Description = "This is the description",
+                    Version = "v1"
+                });
+                var fileName = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var filePath = Path.Combine(AppContext.BaseDirectory, fileName);
+                cfg.IncludeXmlComments(filePath);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -97,8 +117,17 @@ namespace OrderService
             {
                 endpoints.MapControllers();
             });
+
             app.UseSerilogRequestLogging();       
+
             PrepDB.PrepPopulation(app);
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(cfg =>
+            {
+                cfg.SwaggerEndpoint("/swagger/v1/swagger.json", "Swagger");
+            });
         }
     }
 }
