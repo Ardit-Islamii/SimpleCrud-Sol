@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Bogus;
 using UnitTesting.Helper;
 namespace UnitTesting.Helper
 {
@@ -10,13 +11,11 @@ namespace UnitTesting.Helper
         public static Inventory InventoryData()
         {
             Item item = ItemHelper.ItemData();
-            var inventory = new Inventory()
-            {
-                Id = Guid.Parse("a2831248-c609-413a-a4b8-7f37cdb3450a"),
-                ItemId = item.Id,
-                Quantity = 10
-            };
-            return inventory;
+            return new Faker<Inventory>()
+                .RuleFor(x => x.Id, Guid.NewGuid())
+                .RuleFor(x => x.ItemId, item.Id)
+                .RuleFor(x => x.Quantity, new Random().Next(1, int.MaxValue))
+                .Generate();
         } 
     }
 }

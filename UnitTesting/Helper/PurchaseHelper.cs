@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Bogus;
 using Models;
 
 namespace UnitTesting.Helper
@@ -10,13 +11,12 @@ namespace UnitTesting.Helper
 
         public static Purchase PurchaseData()
         {
-            Purchase purchase = new Purchase()
-            {
-                Id = Guid.NewGuid(),
-                ItemId = Guid.NewGuid(),
-                Amount = 5
-            };
-            return purchase;
+            Item item = ItemHelper.ItemData();
+            return new Faker<Purchase>()
+                .RuleFor(x => x.Id, Guid.NewGuid())
+                .RuleFor(x => x.ItemId, item.Id)
+                .RuleFor(x => x.Amount, new Randomizer().Int())
+                .Generate();
         }
     }
 }

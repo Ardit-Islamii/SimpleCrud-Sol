@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Bogus;
 
 namespace UnitTesting.Helper
 {
@@ -9,12 +10,10 @@ namespace UnitTesting.Helper
     {
         public static Item ItemData()
         {
-            return new Item()
-            {
-                Id = Guid.Parse("238b13ad-30e6-4e89-8a70-53071d994255"),
-                Name = "TestItem",
-                Price = 100.1m
-            };
+            return new Faker<Item>().RuleFor(x => x.Id, x => Guid.NewGuid())
+                .RuleFor(x => x.Name, x => x.Commerce.Product())
+                .RuleFor(x => x.Price, x => Decimal.Parse(x.Commerce.Price()))
+                .Generate();
         }
     }
 }
