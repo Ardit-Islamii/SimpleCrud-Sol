@@ -8,7 +8,7 @@ using RabbitMQ.Client;
 
 namespace OrderService.AsyncDataServices
 {
-    /* UNUSED CODE, TRANSFERRED TO MASSTRANSIT. */
+    //Unused code due to using MassTransit instead of pure RabbitMQ
     public class MessageBusClient : IMessageBusClient
     {
         private readonly IConfiguration _configuration;

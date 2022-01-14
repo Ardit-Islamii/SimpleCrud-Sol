@@ -8,6 +8,9 @@ using OrderService.Dtos;
 
 namespace OrderService.SyncDataServices.Http
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class InventoryServiceDataClient : IInventoryServiceDataClient
     {
         private readonly HttpClient _httpClient;
@@ -20,6 +23,12 @@ namespace OrderService.SyncDataServices.Http
             _logger = logger.CreateLogger("InventoryServiceDataClient");
             _configuration = configuration;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         public async Task SendItemToSubExample(ItemReadDto item)
         {
             var httpContent = new StringContent(JsonSerializer.Serialize(item),

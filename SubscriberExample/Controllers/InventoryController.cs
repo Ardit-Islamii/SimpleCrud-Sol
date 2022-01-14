@@ -24,6 +24,12 @@ namespace InventoryService.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Gets an inventory based on the given itemId
+        /// </summary>
+        /// <param name="itemId"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         // GET api/c/<InventoryController>/guid-id.
         [HttpGet("{itemId}")]
         public async Task<IActionResult> GetInventoryByItemId(Guid itemId, CancellationToken cancellationToken)
@@ -31,13 +37,13 @@ namespace InventoryService.Controllers
             try
             {
                 //Delaying task purposefully to test the cancellation token.
-                /*await Task.Delay(4000);*/
+                await Task.Delay(4000);
                 var inventoryItem = await _inventoryService.FindByItemID(itemId);
                 if (inventoryItem != null)
                 {
                     if (cancellationToken.IsCancellationRequested)
                     {
-                        _logger.LogInformation("Request to grab inventory item cancelled.");
+                        _logger.LogInformation($"Request to grab inventory item with id {itemId} cancelled.");
                         cancellationToken.ThrowIfCancellationRequested();
                     }
                     var inventoryReadDto = _mapper.Map<InventoryReadDto>(inventoryItem);
@@ -49,7 +55,7 @@ namespace InventoryService.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError($"{e}");
+                _logger.LogError($"{e.Message}");
                 return BadRequest();
             }
         }

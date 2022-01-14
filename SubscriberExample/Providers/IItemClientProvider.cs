@@ -6,6 +6,10 @@ using Refit;
 
 namespace InventoryService.DataAccess
 {
+    /// <summary>
+    /// Testing out refit
+    /// All the endpoints for the itemController on OrderService 
+    /// </summary>
     public interface IItemClientProvider
     {
         [Get("")]

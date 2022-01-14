@@ -11,6 +11,7 @@ using OrderService.Contracts.Services;
 using OrderService.Dtos;
 using OrderService.Extensions;
 using OrderService.SyncDataServices.Http;
+using Polly.Retry;
 
 namespace OrderService.Controllers
 {   

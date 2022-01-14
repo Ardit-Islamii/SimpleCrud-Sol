@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace OrderService.AsyncDataServices
 {
-    /* UNUSED CODE, NOT IMPLEMENTED PROPERLY YET. */
+    /* Unused code due to not being able to implement kafka yet */
     public class KafkaProducerBackgroundService : BackgroundService
     {
         private readonly ILogger _logger;

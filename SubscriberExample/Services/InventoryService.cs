@@ -19,13 +19,12 @@ namespace InventoryService.Services
             var inventory = await _inventoryRepository.FindByItemID(itemId);
             if (inventory != null)
             {
-                if(inventory.Quantity > 0)
+                if (inventory.Quantity > 0)
                 {
                     inventory.Quantity--;
                     return await _inventoryRepository.DecrementItemQuantity(inventory);
                 }
-                    return false;
-                }
+            }
             return false;
         }
 

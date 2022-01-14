@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.Reflection;
 using GreenPipes;
 using InventoryService.Consumers;
 using InventoryService.Contracts.Repositories;
@@ -16,6 +18,8 @@ using Microsoft.Extensions.Hosting;
 using Refit;
 using Serilog;
 using GreenPipes;
+using Microsoft.OpenApi.Models;
+
 //using SubscriberExample.AsyncDataServices;
 
 namespace InventoryService
@@ -33,6 +37,8 @@ namespace InventoryService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            //MSSQL Database configuration
             services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("Connection-String")));
             services.AddAutoMapper(typeof(Startup));
@@ -66,6 +72,20 @@ namespace InventoryService
             {
                 c.BaseAddress = new Uri(Configuration["ItemUri"]);
             });
+
+            //Swagger configuration
+            services.AddSwaggerGen(cfg =>
+            {
+                cfg.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Swagger API",
+                    Description = "This is the description",
+                    Version = "v1"
+                });
+                var fileName = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var filePath = Path.Combine(AppContext.BaseDirectory, fileName);
+                cfg.IncludeXmlComments(filePath);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -88,6 +108,13 @@ namespace InventoryService
             });
 
             app.UseSerilogRequestLogging();
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(cfg =>
+            {
+                cfg.SwaggerEndpoint("/swagger/v1/swagger.json", "Swagger");
+            });
         }
     }
 }

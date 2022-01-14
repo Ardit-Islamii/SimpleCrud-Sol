@@ -20,24 +20,34 @@ namespace UnitTesting.PurchaseConsumerUnitTest
     {
         private readonly Purchase purchaseItem = PurchaseHelper.PurchaseData();
         private readonly Mock<IInventoryService> _mockedInventoryService;
-        private readonly Mock<ILogger> _mockedLogger;
+        private readonly Mock<ILogger<PurchaseConsumer>> _mockedLogger;
 
         public ConsumerUnitTest()
         {
             _mockedInventoryService = new Mock<IInventoryService>();
-            _mockedLogger = new Mock<ILogger>();
+            _mockedLogger = new Mock<ILogger<PurchaseConsumer>>();
+
         }
         [Fact]
         public async Task PublishPurchase_()
         {
             var harness = new InMemoryTestHarness();
-            var consumerHarness = harness.Consumer<PurchaseConsumer>();
+            var consumerHarness = harness.Consumer<PurchaseConsumer>(() => new PurchaseConsumer(_mockedLogger.Object, _mockedInventoryService.Object),cfg =>
+            {
+                cfg.UseMessageRetry(r => r.Incremental(3, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(2)));
+            });
             
             await harness.Start();
+
             try
             {
+                //Arrange
+                _mockedInventoryService.Setup(x => x.DecrementItemQuantity(It.IsAny<Guid>())).ReturnsAsync(true);
+
+                //Act
                 await harness.InputQueueSendEndpoint.Send<Purchase>(purchaseItem);
 
+                //Assert
                 // did the endpoint consume the message
                 Assert.True(await harness.Consumed.Any<Purchase>());
 
@@ -55,16 +65,17 @@ namespace UnitTesting.PurchaseConsumerUnitTest
         public async Task PublishPurchase_FirstTry_FaultPublished()
         {
             var harness = new InMemoryTestHarness();
-            var consumerHarness = harness.Consumer<PurchaseConsumer>(cfg =>
+            var consumerHarness = harness.Consumer<PurchaseConsumer>(() => new PurchaseConsumer(_mockedLogger.Object, _mockedInventoryService.Object), cfg =>
             {
                 cfg.UseMessageRetry(r => r.Incremental(3, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(2)));
             });
 
             await harness.Start();
+
             try
             {
                 await harness.InputQueueSendEndpoint.Send<Purchase>(purchaseItem);
-               
+                
                 // did the endpoint consume the message
                 Assert.True(await harness.Consumed.Any<Purchase>());
 

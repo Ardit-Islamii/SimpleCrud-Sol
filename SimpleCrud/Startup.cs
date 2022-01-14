@@ -70,12 +70,14 @@ namespace OrderService
             /* Commented out due to not being implemented yet.
              * services.AddHostedService<KafkaProducerBackgroundService>();*/
 
+            //Redis configuration
             services.AddStackExchangeRedisCache(options =>
             {
                 options.Configuration = Configuration.GetConnectionString("Redis");
                 options.InstanceName = "SimpleCrud_";
             });
 
+            //MassTransit configuration
             services.AddMassTransit(config =>
             {
                 config.UsingRabbitMq((ctx, config) =>
@@ -85,6 +87,7 @@ namespace OrderService
             });
             services.AddMassTransitHostedService();
 
+            //Swagger configuration
             services.AddSwaggerGen(cfg =>
             {
                 cfg.SwaggerDoc("v1", new OpenApiInfo

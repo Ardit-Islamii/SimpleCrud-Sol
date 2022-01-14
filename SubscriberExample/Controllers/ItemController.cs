@@ -17,6 +17,12 @@ namespace InventoryService.Controllers
         {
             _logger = logger.CreateLogger("InventoryServiceItemLogger");
         }
+
+        /// <summary>
+        /// Tests connection with the OrderService
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         [HttpPost("testconnection/")]
         public ActionResult TestInBoundConnection([FromBody] ItemReadDto item)
         {
