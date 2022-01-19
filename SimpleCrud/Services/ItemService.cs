@@ -28,10 +28,7 @@ namespace OrderService.Services
             {
                 return await _itemRepository.Delete(item);
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
         public async Task<Item> Get(Guid Id)
@@ -51,10 +48,7 @@ namespace OrderService.Services
             {
                 return await _itemRepository.Update(item);
             }
-            else
-            {
-                return null;
-            }
+            return null;
         }
     }
 }
