@@ -1,4 +1,5 @@
-﻿using InventoryService.DataAccess;
+﻿using System.Threading.Tasks;
+using InventoryService.DataAccess;
 using InventoryService.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -24,10 +25,10 @@ namespace InventoryService.Controllers
         /// <param name="item"></param>
         /// <returns></returns>
         [HttpPost("testconnection/")]
-        public ActionResult TestInBoundConnection([FromBody] ItemReadDto item)
+        public Task<ItemReadDto> TestInBoundConnection([FromBody] ItemReadDto item)
         {
             _logger.LogInformation($"--> Inbound POST # ItemController inside InventoryService, Successfully grabbed {item.Id}");
-            return Ok("Inbound test ok from ItemController inside InventoryService.");
+            return Task.FromResult(item);
         }
     }
 }

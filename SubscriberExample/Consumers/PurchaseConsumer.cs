@@ -17,11 +17,6 @@ namespace InventoryService.Consumers
             _inventoryService = inventoryService;
         }
 
-        public PurchaseConsumer()
-        {
-            
-        }
-
         public async Task Consume(ConsumeContext<Purchase> context)
         {
             if (context.GetRetryCount() == 0)

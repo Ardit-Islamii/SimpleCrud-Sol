@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Models;
 using Nest;
+using OrderService.ClientFactory;
 using OrderService.Contracts.Repositories;
 using OrderService.Contracts.Services;
 using OrderService.Data;
@@ -46,6 +47,8 @@ namespace OrderService
             services.AddTransient<IItemService, ItemService>();
             services.AddTransient<IPurchaseRepository, PurchaseRepository>();
             services.AddTransient<IPurchaseService, PurchaseService>();
+            services.AddTransient(typeof(IClientFactory<>), typeof(ClientFactory<>));
+
 
             services.AddSingleton<IElasticClient>(sp =>
             {
@@ -58,7 +61,8 @@ namespace OrderService
             });
 
             services.AddAutoMapper(typeof(Startup));
-            services.AddHttpClient<IInventoryServiceDataClient, InventoryServiceDataClient>();
+/*            services.AddHttpClient<IInventoryServiceDataClient, InventoryServiceDataClient>();
+*/
             services.AddRefitClient<IInventoryClientProvider>().ConfigureHttpClient(cfg =>
             {
                 cfg.BaseAddress = new Uri(Configuration["InventoryUri"]);
@@ -121,7 +125,7 @@ namespace OrderService
                 endpoints.MapControllers();
             });
 
-            app.UseSerilogRequestLogging();       
+            app.UseSerilogRequestLogging();
 
             PrepDB.PrepPopulation(app);
 

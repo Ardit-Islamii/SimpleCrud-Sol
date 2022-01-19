@@ -26,8 +26,8 @@ namespace UnitTesting.PurchaseConsumerUnitTest
         {
             _mockedInventoryService = new Mock<IInventoryService>();
             _mockedLogger = new Mock<ILogger<PurchaseConsumer>>();
-
         }
+
         [Fact]
         public async Task PublishPurchase_()
         {

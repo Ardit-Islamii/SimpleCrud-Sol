@@ -2,7 +2,7 @@
 
 namespace InventoryService.Dtos
 {
-    // Unused code for now.
+    
     public class ItemReadDto
     {
         public Guid Id { get; set; }

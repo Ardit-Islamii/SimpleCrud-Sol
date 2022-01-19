@@ -17,9 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Refit;
 using Serilog;
-using GreenPipes;
 using Microsoft.OpenApi.Models;
-
 //using SubscriberExample.AsyncDataServices;
 
 namespace InventoryService

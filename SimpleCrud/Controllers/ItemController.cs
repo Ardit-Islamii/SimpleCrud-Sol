@@ -2,14 +2,20 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Models;
 using OrderService.AsyncDataServices;
+using OrderService.ClientFactory;
 using OrderService.Contracts.Services;
+using OrderService.DataAccess;
 using OrderService.Dtos;
 using OrderService.Extensions;
+using OrderService.Options;
+using OrderService.Providers;
 using OrderService.SyncDataServices.Http;
 using Polly.Retry;
 
@@ -26,19 +32,25 @@ namespace OrderService.Controllers
         private readonly ILogger _logger;
         /*private readonly IMessageBusClient _messageBusClient;*/
         private readonly IMapper _mapper;
-        private readonly IInventoryServiceDataClient _inventoryClient;
+        /*private readonly IInventoryServiceDataClient _inventoryClient;*/
+        private readonly IConfiguration _configuration;
+        private readonly IClientFactory<IItemClientProvider> _itemClientFactory;
         private readonly IDistributedCache _cache;
 
         public ItemController(IItemService itemService, ILoggerFactory logger /*IMessageBusClient messageBusClient*/,
             IMapper mapper, IDistributedCache cache,
-            IInventoryServiceDataClient inventoryClient)
+            /*IInventoryServiceDataClient inventoryClient,*/
+            IConfiguration configuration,
+            IClientFactory<IItemClientProvider> itemClientFactory)
         {
             _itemService = itemService;
             _logger = logger.CreateLogger("ItemControllerLogger");
             /*_messageBusClient = messageBusClient;*/
             _mapper = mapper;
             _cache = cache;
-            _inventoryClient = inventoryClient;
+            /*_inventoryClient = inventoryClient;*/
+            _configuration = configuration;
+            _itemClientFactory = itemClientFactory;
         }
 
         /// <summary>
@@ -102,13 +114,15 @@ namespace OrderService.Controllers
            {
                 _logger.LogInformation($"--> Successfully created item: {result}");
                 var itemReadDto = _mapper.Map<ItemReadDto>(result);
-                itemReadDto.Event = "Item_Published";
 
                 //Send message sync using httpclient
                 try
                 {
-                    await _inventoryClient.SendItemToSubExample(itemReadDto);
-                }catch(Exception ex)
+                    var uri = _configuration.GetSection(ItemOptions.DefaultSection).GetSection("Uri").Value;
+                    var itemClient = await _itemClientFactory.CreateClient(uri);
+                    var response = await itemClient.TestInboundConnection(itemReadDto);
+                }
+                catch(Exception ex)
                 {
                     _logger.LogError($"--> Could not send synchronously: {ex.Message}", ex);
                 }
@@ -122,6 +136,7 @@ namespace OrderService.Controllers
                 {
                     _logger.LogError($"--> Could not send message asynchronously. Error: {ex.Message}");
                 }*/
+
                 return CreatedAtAction(nameof(Get), new { id = result.Id}, result);
            }
            _logger.LogInformation("--> Could not create item");

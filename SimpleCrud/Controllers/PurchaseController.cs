@@ -3,12 +3,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Models;
 using Nest;
+using OrderService.ClientFactory;
 using OrderService.Contracts.Services;
 using OrderService.DataAccess;
 using OrderService.Dtos;
+using OrderService.Options;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -27,14 +30,17 @@ namespace OrderService.Controllers
         private readonly IInventoryClientProvider _inventoryData;
         private readonly ILogger<PurchaseController> _logger;
         private readonly IElasticClient _client;
+        private readonly IClientFactory<IInventoryClientProvider> _inventoryClientFactory;
+        private readonly IConfiguration _configuration;
         private CancellationTokenSource cancellationTokenSource;
         private CancellationToken cancellationToken;
-        
 
         public PurchaseController(IPurchaseService purchaseService, IPublishEndpoint publish, IItemService itemService,
             IInventoryClientProvider inventoryData,
             ILogger<PurchaseController> logger,
-            IElasticClient client
+            IElasticClient client,
+            IClientFactory<IInventoryClientProvider> inventoryClientFactory,
+            IConfiguration configuration
             )
         {
             _publish = publish;
@@ -43,9 +49,12 @@ namespace OrderService.Controllers
             _inventoryData = inventoryData;
             _logger = logger;
             _client = client;
+            _inventoryClientFactory = inventoryClientFactory;
+            _configuration = configuration;
             cancellationTokenSource = new CancellationTokenSource();
             cancellationToken = cancellationTokenSource.Token;
         }
+
         /// <summary>
         /// Creates a purchase based on itemId.
         /// First it gets the quantity available for that item and checks if its more than zero.
@@ -58,10 +67,12 @@ namespace OrderService.Controllers
         [HttpPost("createpurchase/{id}")]
         public async Task<IActionResult> Post(Guid id)
         {
+            var uri = _configuration.GetSection(InventoryOptions.DefaultSection).GetSection("Uri");
+            var inventoryClient = await _inventoryClientFactory.CreateClient(uri.Value);
+
             Item item = await _itemService.Get(id);
-            InventoryReadDto inventoryItem = await _inventoryData.GetInventory(id, cancellationToken);
-            var availableStock = inventoryItem.Quantity > 0;
-            if (availableStock)
+            InventoryReadDto inventoryItem = await inventoryClient.GetInventory(id, cancellationToken);
+            if (inventoryItem.Quantity > 0)
             {
                 Purchase result = await _purchaseService.Create(item);
                 try
