@@ -2,22 +2,17 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Models;
-using OrderService.AsyncDataServices;
 using OrderService.ClientFactory;
 using OrderService.Contracts.Services;
-using OrderService.DataAccess;
 using OrderService.Dtos;
 using OrderService.Extensions;
 using OrderService.Options;
 using OrderService.Providers;
-using OrderService.SyncDataServices.Http;
-using Polly.Retry;
 
 namespace OrderService.Controllers
 {   
