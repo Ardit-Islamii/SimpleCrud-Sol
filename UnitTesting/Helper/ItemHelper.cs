@@ -1,8 +1,8 @@
 ﻿using Models;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Bogus;
+using Microsoft.Extensions.Configuration;
+using OrderService.Dtos;
 
 namespace UnitTesting.Helper
 {
@@ -14,6 +14,15 @@ namespace UnitTesting.Helper
                 .RuleFor(x => x.Name, x => x.Commerce.Product())
                 .RuleFor(x => x.Price, x => Decimal.Parse(x.Commerce.Price()))
                 .Generate();
+        }
+        public static ItemReadDto ItemReadDtoData(Item item)
+        {
+            return new ItemReadDto
+            {
+                Id = item.Id, 
+                Name = item.Name, 
+                Price = item.Price
+            };
         }
     }
 }

@@ -1,9 +1,7 @@
 ﻿using Models;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Bogus;
-using UnitTesting.Helper;
+using OrderService.Dtos;
 namespace UnitTesting.Helper
 {
     public static class InventoryHelper
@@ -16,6 +14,16 @@ namespace UnitTesting.Helper
                 .RuleFor(x => x.ItemId, item.Id)
                 .RuleFor(x => x.Quantity, new Random().Next(1, int.MaxValue))
                 .Generate();
-        } 
+        }
+
+        public static InventoryReadDto InventoryReadDto(Inventory inventory)
+        {
+            return new InventoryReadDto()
+            {
+                Id = inventory.Id,
+                Quantity = inventory.Quantity,
+                ItemId = inventory.ItemId
+            };
+        }
     }
 }

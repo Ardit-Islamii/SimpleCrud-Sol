@@ -102,40 +102,10 @@ namespace OrderService.Controllers
         /// <returns></returns>
         // POST api/<ValuesController>/createitem/itemTemplate
         [HttpPost("createitem/")]
-        public async Task<IActionResult> CreateItem([FromBody] Item item)
+        public async Task<ItemReadDto> CreateItem([FromBody] Item item)
         {
-           Item result =  await _itemService.Create(item);
-           if(result != null)
-           {
-                _logger.LogInformation($"--> Successfully created item: {result}");
-                var itemReadDto = _mapper.Map<ItemReadDto>(result);
-
-                //Send message sync using httpclient
-                try
-                {
-                    var uri = _configuration.GetSection(ItemOptions.DefaultSection).GetSection("Uri").Value;
-                    var itemClient = await _itemClientFactory.CreateClient(uri);
-                    var response = await itemClient.TestInboundConnection(itemReadDto);
-                }
-                catch(Exception ex)
-                {
-                    _logger.LogError($"--> Could not send synchronously: {ex.Message}", ex);
-                }
-
-                //Send message async using RabbitMQ -  Commented out due to not being relevant anymore.
-                /*try
-                {
-                    _messageBusClient.PublishNewItem(itemReadDto);
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError($"--> Could not send message asynchronously. Error: {ex.Message}");
-                }*/
-
-                return CreatedAtAction(nameof(Get), new { id = result.Id}, result);
-           }
-           _logger.LogInformation("--> Could not create item");
-           return BadRequest();
+           ItemReadDto result =  await _itemService.Create(item);
+           return result;
         }
 
         /// <summary>

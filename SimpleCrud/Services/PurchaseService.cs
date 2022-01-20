@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -21,20 +22,22 @@ namespace OrderService.Services
         private readonly IPurchaseRepository _purchaseRepository;
         private readonly IPublishEndpoint _publish;
         private readonly IItemService _itemService;
-        private readonly ILogger<PurchaseController> _logger;
+        private readonly ILogger<PurchaseService> _logger;
         private readonly IElasticClient _client;
         private readonly IClientFactory<IInventoryClientProvider> _inventoryClientFactory;
         private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
         private CancellationTokenSource cancellationTokenSource;
         private CancellationToken cancellationToken;
 
         public PurchaseService(IPublishEndpoint publish,
             IItemService itemService,
-            ILogger<PurchaseController> logger,
+            ILogger<PurchaseService> logger,
             IElasticClient client,
             IClientFactory<IInventoryClientProvider> inventoryClientFactory,
             IConfiguration configuration,
-            IPurchaseRepository purchaseRepository
+            IPurchaseRepository purchaseRepository,
+            IMapper mapper
         )
         {
             _publish = publish;
@@ -46,9 +49,10 @@ namespace OrderService.Services
             cancellationTokenSource = new CancellationTokenSource();
             cancellationToken = cancellationTokenSource.Token;
             _purchaseRepository = purchaseRepository;
+            _mapper = mapper;
         }
 
-        public async Task<Purchase> Create(Guid id)
+        public async Task<PurchaseReadDto> Create(Guid id)
         {
             var uri = _configuration.GetSection(InventoryOptions.DefaultSection).GetSection("Uri");
             var inventoryClient = await _inventoryClientFactory.CreateClient(uri.Value);
@@ -69,6 +73,8 @@ namespace OrderService.Services
                 return null;
             }
 
+            var purchaseReadDto = _mapper.Map<PurchaseReadDto>(result);
+
             _logger.LogInformation("Successfully created a purchase entity on the database");
 
             if (inventoryItem.Quantity > 0)
@@ -86,7 +92,7 @@ namespace OrderService.Services
                         _logger.LogInformation(response.Id);
                     }
 
-                    return result;
+                    return purchaseReadDto;
                 }
                 catch (Exception ex)
                 {

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using GreenPipes;
 using InventoryService.Consumers;
@@ -18,7 +15,8 @@ namespace UnitTesting.PurchaseConsumerUnitTest
 {
     public class ConsumerUnitTest
     {
-        private readonly Purchase purchaseItem = PurchaseHelper.PurchaseData();
+        private readonly static Item item = ItemHelper.ItemData();
+        private readonly static Purchase purchaseItem = PurchaseHelper.PurchaseData(item);
         private readonly Mock<IInventoryService> _mockedInventoryService;
         private readonly Mock<ILogger<PurchaseConsumer>> _mockedLogger;
 

@@ -8,7 +8,8 @@ namespace OrderService.Profiles
     {
         public SimpleCrudProfiles()
         {
-            CreateMap<Item, ItemReadDto>();
+            CreateMap<Item, ItemReadDto>().ReverseMap();
+            CreateMap<Purchase, PurchaseReadDto>().ReverseMap();
         }
     }
 }

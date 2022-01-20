@@ -46,6 +46,7 @@ namespace OrderService.Controllers
         public async Task<IActionResult> Post(Guid id)
         {
             var result = await _purchaseService.Create(id);
+
             return Ok(result);
         }
     }
